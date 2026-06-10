@@ -1,0 +1,145 @@
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:myapp/screens/home_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'screens/ExpenseTracker_screen.dart';
+import 'screens/sms_screen.dart';
+import 'firebase_options.dart';
+import 'screens/login_screen.dart';
+import 'theme_notifier.dart';
+
+void main() async {
+  // 1. LOAD ENVIRONMENT VARIABLES
+  await dotenv.load(fileName: ".env");
+
+  // 2. CAPTURE THE BINDING TO CONTROL THE NATIVE SPLASH
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // 3. FORCE Android/iOS TO PRESERVE YOUR BLACK SPLASH SCREEN
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint("Firebase initialized successfully");
+  } catch (e) {
+    debugPrint("CRITICAL: Firebase failed to initialize: $e");
+  }
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: const ExpenseTrackerApp(),
+    ),
+  );
+
+  // 4. HOLD LOGO FOR 2 SECONDS SO IT'S SEEN, THEN DISMISS IT SMOOTHLY
+  await Future.delayed(const Duration(seconds: 2));
+  FlutterNativeSplash.remove();
+}
+
+class ExpenseTrackerApp extends StatelessWidget {
+  const ExpenseTrackerApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Expense Tracker',
+      theme: ThemeData.dark(),
+      darkTheme: ThemeData.light(),
+      themeMode: themeNotifier.themeMode,
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasData) {
+            return const MainScreen();
+          } else {
+            return LoginScreen();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _currentIndex = 0;
+  final PageController _pageController = PageController();
+
+  final List<Widget> _screens = [
+    HomePage(),
+    const ExpenseTrackerScreen(),
+    const SmsScreen(),
+  ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          children: _screens,
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+          );
+        },
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_balance_wallet),
+            label: 'Expense Tracker',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sms),
+            label: 'SMS',
+          ),
+        ],
+      ),
+    );
+  }
+}
