@@ -8,8 +8,7 @@
 An advanced, intelligent personal finance companion built with Flutter that completely simplifies monthly expense tracking. By combining automated SMS transaction parsing with Google's Gemini AI, Xpense eliminates the tedious chore of manual budgeting, turning daily text notifications and physical receipts into clear financial insights.
 
 ### 🚀 Download Link
-📥 **[Click Here to Download Xpense APK (v1.0.0)](https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app/releases/download/v1.0.0/xpense.app.apk)
-
+📥 **[Click Here to Download Xpense APK (v1.0.0)](https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app/releases/download/v1.0.0/xpense.app.apk)**
 
 ---
 
@@ -29,12 +28,14 @@ The app relies strictly on **Cloud Firestore** as its absolute single source of 
 
 ## 📑 Table of Contents
 
-* [Project Description](#-project-description)
-* [Features & Screenshots](#-features)
-* [Technical Architecture](#-technical-architecture)
-* [Installation & Setup](#-installation--setup)
-* [How to Use](#-how-to-use)
-* [Credits & Acknowledgments](#-credits--acknowledgments)
+* [Project Description](#project-description)
+* [Features & Screenshots](#features--screenshots)
+* [Technical Architecture](#technical-architecture)
+* [Installation & Setup](#installation--setup)
+* [How to Use](#how-to-use)
+* [Credits & Acknowledgments](#credits--acknowledgments)
+
+---
 
 ## ✨ Features & Screenshots
 
@@ -51,7 +52,6 @@ Access to Xpense is protected by a secure authentication layer. This ensures tha
   <img src="https://github.com/user-attachments/assets/02cd36da-0bc2-43f3-9b71-435416d117c6" width="300" alt="Xpense Login Authentication Screen" />
 </p>
 
-
 ### 🏠 2. The Home Dashboard
 
 Once authenticated, users are greeted with a high-level command center providing an immediate overview of their monthly financial health, pulling real-time data from Cloud Firestore.
@@ -62,8 +62,6 @@ Once authenticated, users are greeted with a high-level command center providing
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f6ef5548-5ac6-4b3e-918f-01b7a46c9ca8" width="300" alt="Xpense Home Screen Dashboard" />
 </p>
-
-
 
 ### 🚀 3. Intelligent Expense Tracker & AI Bill Scanner
 
@@ -78,8 +76,6 @@ This core feature page offers multiple avenues for expense logging, using state 
   <img src="https://github.com/user-attachments/assets/675f21f6-235b-4bb9-918b-7614f83fb4b7" width="300" alt="Xpense Expense Tracker and AI Scan Screen" />
 </p>
 
-
-
 ### 📲 4. Native SMS Bank Statement Parser
 
 Xpense turns daily financial notifications into useful financial records by parsing native device messages.
@@ -91,7 +87,6 @@ Xpense turns daily financial notifications into useful financial records by pars
   <img src="https://github.com/user-attachments/assets/5346f908-75ed-403d-be46-39b55c06477d" width="300" alt="Xpense SMS Banking Tracker" />
 </p>
 
-
 ### ⚙️ 5. Personalized Settings & Theme Control
 
 The configuration screen allows for basic profile review and global app state customization.
@@ -102,6 +97,8 @@ The configuration screen allows for basic profile review and global app state cu
 <p align="center">
   <img src="https://github.com/user-attachments/assets/f5d9d0da-6690-41c4-8825-d8b37e30a408" width="300" alt="Xpense Profile and Theme Settings Screen" />
 </p>
+
+---
 
 ## 🏗️ Technical Architecture
 
@@ -137,9 +134,11 @@ The underlying Android build infrastructure has been modernized and locked down 
 * **Built-in Kotlin Daemon:** Migrated to modern `org.jetbrains.kotlin.android` tooling for faster, safer native compilation.
 * **ProGuard Obfuscation:** A custom `proguard-rules.pro` configuration safeguards the release APK, explicitly preventing the R8 compiler from aggressively minifying or stripping out critical optional dependencies (like ML Kit components).
 
+---
+
 ## 🛠️ Installation & Setup
 
-To get a local copy of the Xpense project up and running on your development machine, follow these steps. 
+To get a local copy of the Xpense project up and running on your development machine, follow this step-by-step guide. 
 
 ### Prerequisites
 
@@ -156,8 +155,60 @@ Before you begin, ensure you have the following installed and configured:
 Open your terminal and clone the project to your local machine:
 
 ```bash
-git clone [https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app.git](https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app)
-cd xpense-monthly-expense-monitoring-app.git
+git clone [https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app.git](https://github.com/JAKOB-010/xpense-monthly-expense-monitoring-app.git)
+cd xpense-monthly-expense-monitoring-app
 ```
+## 🚀 How to Use
 
+Get the most out of Xpense by following this operational workflow guide to manage your personal finances, from basic authentication to automated AI receipt logging.
+
+### 1. Account Authentication & Setup
+* Launch the application on your device.
+* If you are a new user, tap the sign-up link to create an account with a valid email and secure password.
+* Log in using your credentials. Your session token is automatically managed securely, meaning you won’t have to re-authenticate every time you open the app.
+
+### 2. Setting Your Monthly Budget
+Before tracking your expenses, establish your financial baseline:
+* Head over to the **Expense Tracker** screen (accessible from the navigation bar).
+* Tap on the **Set Salary** button.
+* Enter your total projected income for the current month and save. 
+* The interface will immediately recalculate your remaining **Balance** relative to any active expenses logged under your profile.
+
+### 3. Adding Expenses Manually vs. AI Bill Scanning
+You can input your spending data using two distinct modes:
+
+* **The Manual Route:** Fill out the clear input fields for the transaction title, exact cost, and select an appropriate visual category (e.g., Food, Grocery). Tap **Add Expense** to securely commit the data directly to Cloud Firestore.
+* **The Smart Route (AI Scan):** Tap the **Scan Bill** button to invoke your device camera. Snap a clear image of your store receipt or invoice. The app compresses the image to Base64 format and sends it to the **Gemini 3.5 Flash** engine. Within seconds, the AI parses the raw text and automatically populates the title and amount fields for your final review.
+
+### 4. Activating Automated SMS Inbox Parsing
+To track digital banking payments seamlessly without manual interaction:
+* Navigate to the **SMS Tracker** screen.
+* When prompted by the Android system framework, grant the application **Read SMS Permissions**.
+* The application will immediately leverage its internal `BankMessageParser` logic to read incoming banking alerts. 
+* Real-time financial debits/credits will populate in a structured list view, displaying the extracted transaction values instantly in Indian Rupees (₹).
+
+### 5. Managing Application Preferences
+* Navigate to the **Settings** layout.
+* Toggle the **Light Mode** switch to seamlessly transition the UI design state globally across all screens via the integrated `ThemeNotifier` state engine.
+* Tap **Logout** to cleanly terminate your cloud user session or select **Delete Account** to safely remove your registration tokens permanently.
+
+## 🤝 Credits & Acknowledgments
+
+Xpense was made possible through the utilization of open-source libraries, robust cloud infrastructure, and state-of-the-art generative AI models. 
+
+### 🚀 Core Technologies & Frameworks
+* **[Flutter](https://flutter.dev/):** For providing the reactive, multi-platform framework used to build a beautiful and high-performance user interface.
+* **[Google Gemini AI](https://ai.google.dev/):** Special thanks to the Google AI Studio team for the **Gemini 3.5 Flash** model, which powers our automated, high-speed receipt processing engine.
+* **[Firebase](https://firebase.google.com/):** For delivering reliable cloud infrastructure across Authentication and Cloud Firestore, keeping user data synchronized in real-time.
+
+### 📦 Open-Source Libraries
+A heartfelt thank you to the maintainers and contributors of the following packages utilized within this project:
+* `provider` - For elegant and scalable architecture state management.
+* `flutter_sms_inbox` - For providing flawless access bridges to native Android messaging streams.
+* `fl_chart` / `pie_chart` - For the responsive graphical financial data analytics.
+* `permission_handler` - For making native permission requests clean and user-friendly.
+
+### 🎓 Academic & Development Support
+* Developed with dedication to building smart, practical utilities that simplify daily administrative burdens.
+* Acknowledgment to all beta-testers who provided critical logs and feedback to help refine the local RegEx parser engines and ProGuard compilation safety setups.
 
